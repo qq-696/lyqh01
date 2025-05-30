@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智农续航-植保无人机租借系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Tailwind配置 -->
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                primary: '#22c55e', // 主色调-绿色(代表农业)
+                secondary: '#f97316', // 辅助色-橙色(代表活力)
+                neutral: '#1f2937', // 中性色-深灰
+              },
+              fontFamily: {
+                sans: ['Inter', 'system-ui', 'sans-serif'],
+              },
+            },
+          }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+          .content-auto {
+            content-visibility: auto;
+          }
+          .text-shadow {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          }
+          .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+          }
+          .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+          }
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 text-neutral">
+<!-- 导航栏 -->
+<header id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-white/90 backdrop-blur-sm shadow-sm">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <a href="#" class="flex items-center">
+                    <i class="fa fa-pagelines text-primary text-3xl mr-2"></i>
+                    <span class="text-xl font-bold text-neutral">智农续航</span>
+                </a>
+                <nav class="hidden md:ml-10 md:flex space-x-8">
+                    <a href="#services" class="text-neutral hover:text-primary px-3 py-2 text-sm font-medium transition-colors">服务项目</a>
+                    <a href="#pricing" class="text-neutral hover:text-primary px-3 py-2 text-sm font-medium transition-colors">价格详情</a>
+                    <a href="#process" class="text-neutral hover:text-primary px-3 py-2 text-sm font-medium transition-colors">租借流程</a>
+                    <a href="#about" class="text-neutral hover:text-primary px-3 py-2 text-sm font-medium transition-colors">关于我们</a>
+                </nav>
+            </div>
+            <div class="flex items-center">
+                <button class="hidden md:block px-4 py-2 text-sm font-medium text-primary border border-primary rounded-md hover:bg-primary/5 transition-colors mr-4">登录</button>
+                <button class="hidden md:block px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90 transition-colors">注册</button>
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-neutral hover:text-primary focus:outline-none">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 移动端菜单 -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <a href="#services" class="block px-3 py-2 text-base font-medium text-neutral hover:text-primary">服务项目</a>
+            <a href="#pricing" class="block px-3 py-2 text-base font-medium text-neutral hover:text-primary">价格详情</a>
+            <a href="#process" class="block px-3 py-2 text-base font-medium text-neutral hover:text-primary">租借流程</a>
+            <a href="#about" class="block px-3 py-2 text-base font-medium text-neutral hover:text-primary">关于我们</a>
+            <div class="flex space-x-2 pt-2">
+                <button class="flex-1 px-4 py-2 text-sm font-medium text-primary border border-primary rounded-md hover:bg-primary/5 transition-colors">登录</button>
+                <button class="flex-1 px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90 transition-colors">注册</button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- 英雄区域 -->
+<section class="relative h-screen flex items-center overflow-hidden">
+    <div class="absolute inset-0 z-0">
+        <img src="https://picsum.photos/id/116/1920/1080" alt="无人机喷洒农药的农田" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/40"></div>
+    </div>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="max-w-3xl">
+            <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold text-white leading-tight text-shadow mb-6">
+                智能植保无人机<br>为您的农田保驾护航
+            </h1>
+            <p class="text-[clamp(1rem,2vw,1.25rem)] text-white/90 mb-8 max-w-2xl">
+                高效、精准、环保的农业解决方案，让农业生产更简单、更智能。病虫害监测、作物播种、施药施肥一站式服务。
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <a href="#booking" class="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-medium rounded-md transition-all hover-lift">
+                    立即预约 <i class="fa fa-arrow-right ml-2"></i>
+                </a>
+                <a href="#pricing" class="px-8 py-3 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white font-medium rounded-md transition-all hover-lift border border-white/30">
+                    查看价格 <i class="fa fa-tag ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <a href="#services" class="text-white/80 hover:text-white">
+            <i class="fa fa-chevron-down text-2xl"></i>
+        </a>
+    </div>
+</section>
+
+<!-- 服务项目 -->
+<section id="services" class="py-20 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral mb-4">我们的服务</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">提供全方位的植保无人机服务，满足您不同的农业需求</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- 服务卡片1 -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden hover-lift">
+                <div class="h-48 overflow-hidden">
+                    <img src="https://picsum.photos/id/1080/600/400" alt="无人机进行病虫害监测" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            <i class="fa fa-search text-xl"></i>
+                        </div>
+                        <h3 class="ml-3 text-xl font-semibold text-neutral">病虫害监测</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">利用高分辨率摄像头和AI算法，快速准确识别农田病虫害情况，提供详细报告和防治建议。</p>
+                    <a href="#booking" class="text-primary hover:text-primary/80 font-medium inline-flex items-center">
+                        了解更多 <i class="fa fa-long-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 服务卡片2 -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden hover-lift">
+                <div class="h-48 overflow-hidden">
+                    <img src="https://picsum.photos/id/1084/600/400" alt="无人机进行作物播种" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            <i class="fa fa-leaf text-xl"></i>
+                        </div>
+                        <h3 class="ml-3 text-xl font-semibold text-neutral">作物播种</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">精准播种技术，均匀播撒种子，提高发芽率和作物产量，节省人力成本和种子用量。</p>
+                    <a href="#booking" class="text-primary hover:text-primary/80 font-medium inline-flex items-center">
+                        了解更多 <i class="fa fa-long-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 服务卡片3 -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden hover-lift">
+                <div class="h-48 overflow-hidden">
+                    <img src="https://picsum.photos/id/1082/600/400" alt="无人机进行施药施肥" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            <i class="fa fa-tint text-xl"></i>
+                        </div>
+                        <h3 class="ml-3 text-xl font-semibold text-neutral">施药施肥</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">根据农田实际需求，精准控制药量和肥量，均匀喷洒，提高利用率，减少环境污染。</p>
+                    <a href="#booking" class="text-primary hover:text-primary/80 font-medium inline-flex items-center">
+                        了解更多 <i class="fa fa-long-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 价格详情 -->
+<section id="pricing" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral mb-4">价格详情</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">透明定价，为您提供最具性价比的农业解决方案</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <!-- 价格卡片1 -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden hover-lift border-t-4 border-primary">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-neutral mb-2">病虫害监测</h3>
+                    <div class="flex items-end mb-4">
+                        <span class="text-4xl font-bold text-primary">¥5</span>
+                        <span class="text-gray-500 ml-1 mb-1">/亩</span>
+                    </div>
+                    <p class="text-gray-600 mb-6">快速检测农田病虫害情况，提供详细报告</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                            <span class="text-gray-600">高清图像采集</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                            <span class="text-gray-600">AI病虫害识别</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                            <span class="text-gray-600">详细分析报告</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                            <span class="text-gray-600">防治建议</span>
+                        </li>
+                        <li class="flex items-start text-gray-400">
+                            <i class="fa fa-times mt-1 mr-2"></i>
+                            <span>定期监测服务</span>
+                        </li>
+                        <li class="flex items-start text-gray-400">
+                            <i class="fa fa-times mt-1 mr-2"></i>
+                            <span>定制化监测方案</span>
+                        </li>
+                    </ul>
+                    <div class="text-center">
+                        <a href="#booking" class="block w-full py-3 px-4 bg-primary hover:bg-primary/90 text-white font-medium rounded-md transition-colors">
+                            立即预约
+                        </a>
+                    </div>
+                </div>
+                <div class="p-4 bg-gray-50 text-center">
+                    <p class="text-sm text-gray-600">
+                        <i class="fa fa-info-circle mr-1"></i>
+                        <span>50亩以上面积，农田范围空旷无障碍物可享优惠</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- 价格卡片2 -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden hover-lift border-t-4 border-secondary transform scale-105 relative z-10">
+                <div class="absolute top-0 right-0 bg-secondary text-white px-4 py-1 text-sm font-medium">
+                    最受欢迎
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-neutral mb-2">作物播种</h3>
+                    <div class="flex items-end mb-4">
+                        <span class="text-4xl font-bold text-secondary">¥12</span>
+                        <span class="text-gray-500 ml-1 mb-1">/亩</span>
+                    </div>
+                    <p class="text-gray-600 mb-6">精准播种，提高发芽率和作物产量</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span class="text-gray-600">种子类型选择</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span class="text-gray-600">精准播种定位</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span class="text-gray-600">播种密度控制</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span class="text-gray-600">发芽率保障</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span class="text-gray-600">播种后跟踪服务</span>
+                        </li>
+                        <li class="flex items-start text-gray-400">
+                            <i class="fa fa-times mt-1 mr-2"></i>
+                            <span>土壤分析服务</span>
+                        </li>
+                    </ul>
+                    <div class="text-center">
+                        <a href="#booking" class="block w-full py-3 px-4 bg-secondary hover:bg-secondary/90 text-white font-medium rounded-md transition-colors">
+                            立即预约
+                        </a>
+                    </div>
+                </div>
+                <div class="p-4 bg-gray-50 text-center">
+                    <p class="text-sm text-gray-600">
+                        <i class="fa fa-info-circle mr-1"></i>
+                        <span>50亩以上面积，农田范围空旷无障碍物可享优惠</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- 价格卡片3 -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden hover-lift border-t-4 border-primary">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-neutral mb-2">施药施肥</h3>
+                    <div class="flex items-end mb-4">
+                        <span class="text-4xl font-bold text-primary">¥15</span>
+                        <span class="text-gray-500 ml-1 mb-1">/亩</span>
+                    </div>
+                    <p class="text-gray-600 mb-6">精准施药施肥，提高利用率，减少污染</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                            <span class="text-gray-600">农药/肥料选择建议</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                            <span class="text-gray-600">精准喷洒控制</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                            <span class="text-gray-600">药量/肥量精准控制</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                            <span class="text-gray-600">喷洒效果评估</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                            <span class="text-gray-600">环保型喷洒技术</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-primary mt-1 mr-2"></i>
+                            <span class="text-gray-600">专业技术支持</span>
+                        </li>
+                    </ul>
+                    <div class="text-center">
+                        <a href="#booking" class="block w-full py-3 px-4 bg-primary hover:bg-primary/90 text-white font-medium rounded-md transition-colors">
+                            立即预约
+                        </a>
+                    </div>
+                </div>
+                <div class="p-4 bg-gray-50 text-center">
+                    <p class="text-sm text-gray-600">
+                        <i class="fa fa-info-circle mr-1"></i>
+                        <span>50亩以上面积，农田范围空旷无障碍物可享优惠</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-12 bg-white p-6 rounded-xl shadow-md max-w-3xl mx-auto">
+            <h3 class="text-xl font-semibold text-neutral mb-4 flex items-center">
+                <i class="fa fa-diamond text-primary mr-2"></i>
+                优惠说明
+            </h3>
+            <ul class="space-y-3">
+                <li class="flex items-start">
+                    <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                    <span class="text-gray-600">50亩以上面积的农田，可享受9折优惠</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                    <span class="text-gray-600">农田范围空旷无障碍物，根据实际情况给予额外5%-10%优惠</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                    <span class="text-gray-600">新用户首次下单，立减50元</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                    <span class="text-gray-600">同时预约两项及以上服务，享受总价8.5折优惠</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- 租借流程 -->
+<section id="process" class="py-20 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral mb-4">租借流程</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">简单四步，轻松完成无人机租借</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- 步骤1 -->
+            <div class="text-center">
+                <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mx-auto mb-6 relative">
+                    <span class="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold">1</span>
+                    <i class="fa fa-file-text-o text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-neutral mb-3">在线预约</h3>
+                <p class="text-gray-600">填写农田信息和服务需求，提交预约申请</p>
+            </div>
+
+            <!-- 步骤2 -->
+            <div class="text-center">
+                <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mx-auto mb-6 relative">
+                    <span class="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold">2</span>
+                    <i class="fa fa-phone text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-neutral mb-3">客服确认</h3>
+                <p class="text-gray-600">客服人员联系您，确认订单详情和价格</p>
+            </div>
+
+            <!-- 步骤3 -->
+            <div class="text-center">
+                <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mx-auto mb-6 relative">
+                    <span class="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold">3</span>
+                    <i class="fa fa-credit-card text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-neutral mb-3">支付订单</h3>
+                <p class="text-gray-600">通过在线支付完成订单，获取订单编号</p>
+            </div>
+
+            <!-- 步骤4 -->
+            <div class="text-center">
+                <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mx-auto mb-6 relative">
+                    <span class="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold">4</span>
+                    <i class="fa fa-rocket text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-neutral mb-3">服务完成</h3>
+                <p class="text-gray-600">专业团队执行服务，完成后提供详细报告</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 预约系统 -->
+<section id="booking" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral mb-4">立即预约</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">填写以下信息，我们将尽快与您联系</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md overflow-hidden max-w-4xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2">
+                <div class="p-8 md:p-10 bg-primary text-white">
+                    <h3 class="text-2xl font-semibold mb-6">联系我们</h3>
+                    <p class="mb-8">如有任何疑问，可通过以下方式联系我们</p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white mr-4">
+                                <i class="fa fa-map-marker"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1">地址</h4>
+                                <p class="text-white/80">广西南宁武鸣区</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white mr-4">
+                                <i class="fa fa-phone"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1">电话</h4>
+                                <p class="text-white/80">400-888-9999</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white mr-4">
+                                <i class="fa fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1">邮箱</h4>
+                                <p class="text-white/80">contact@zhinongxuhang.com</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="mt-8">
+                        <h4 class="font-medium mb-4">关注我们</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors">
+                                <i class="fa fa-weixin"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors">
+                                <i class="fa fa-weibo"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors">
+                                <i class="fa fa-qq"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8 md:p-10">
+                    <form id="booking-form" class="space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">姓名</label>
+                                <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-colors" placeholder="请输入您的姓名" required>
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">手机号码</label>
+                                <input type="tel" id="phone" name="phone" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-colors" placeholder="请输入您的手机号码" required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="address" class="block text-sm font-medium text-gray-700 mb-1">农田地址</label>
+                            <input type="text" id="address" name="address" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-colors" placeholder="请输入农田详细地址" required>
+                        </div>
+
+                        <div>
+                            <label for="area" class="block text-sm font-medium text-gray-700 mb-1">农田面积(亩)</label>
+                            <input type="number" id="area" name="area" min="1" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-colors" placeholder="请输入农田面积" required>
+                        </div>
+
+                        <div>
+                            <label for="service" class="block text-sm font-medium text-gray-700 mb-1">服务类型</label>
+                            <select id="service" name="service" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-colors" required>
+                                <option value="">请选择服务类型</option>
+                                <option value="monitoring">病虫害监测</option>
+                                <option value="seeding">作物播种</option>
+                                <option value="fertilizing">施药施肥</option>
+                                <option value="combination">多项服务组合</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="date" class="block text-sm font-medium text-gray-700 mb-1">期望服务日期</label>
+                            <input type="date" id="date" name="date" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-colors" required>
+                        </div>
+
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-1">备注信息</label>
+                            <textarea id="message" name="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition-colors" placeholder="请输入您的特殊需求或其他说明"></textarea>
+                        </div>
+
+                        <div>
+                            <button type="submit" class="w-full py-3 px-4 bg-primary hover:bg-primary/90 text-white font-medium rounded-md transition-colors">
+                                提交预约
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 关于我们 -->
+<section id="about" class="py-20 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral mb-6">关于我们</h2>
+                <p class="text-gray-600 mb-6">
+                    智农续航是一家专注于农业科技的创新型企业，致力于通过先进的无人机技术和人工智能算法，为广大农户提供高效、精准、环保的农业解决方案。
+                </p>
+                <p class="text-gray-600 mb-6">
+                    我们的团队由农业专家、无人机技术工程师和数据科学家组成，拥有丰富的行业经验和专业知识。我们的使命是通过科技赋能农业，帮助农民提高生产效率，降低生产成本，实现农业可持续发展。
+                </p>
+                <div class="grid grid-cols-2 gap-6 mb-8">
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-4">
+                            <i class="fa fa-users"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-neutral mb-1">专业团队</h4>
+                            <p class="text-gray-600 text-sm">50+农业专家和技术人员</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-4">
+                            <i class="fa fa-map-marker"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-neutral mb-1">服务覆盖</h4>
+                            <p class="text-gray-600 text-sm">全国20+省市自治区</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-4">
+                            <i class="fa fa-trophy"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-neutral mb-1">行业认可</h4>
+                            <p class="text-gray-600 text-sm">多项农业科技奖项</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-4">
+                            <i class="fa fa-check-circle"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-neutral mb-1">客户满意</h4>
+                            <p class="text-gray-600 text-sm">98%客户满意度</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="#booking" class="inline-flex items-center px-6 py-3 bg-primary hover:bg-primary/90 text-white font-medium rounded-md transition-colors">
+                    立即体验 <i class="fa fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+            <div class="relative">
+                <div class="relative z-10 rounded-xl overflow-hidden shadow-lg">
+                    <img src="https://picsum.photos/id/119/800/600" alt="智农续航团队工作照" class="w-full h-auto">
+                </div>
+                <div class="absolute -bottom-6 -left-6 w-64 h-64 bg-primary/10 rounded-full -z-0"></div>
+                <div class="absolute -top-6 -right-6 w-40 h-40 bg-secondary/10 rounded-full -z-0"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 客户评价 -->
+<section class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral mb-4">客户评价</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">听听我们的客户怎么说</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- 评价1 -->
+            <div class="bg-white p-6 rounded-xl shadow-md hover-lift">
+                <div class="flex items-center mb-4">
+                    <img src="https://picsum.photos/id/1005/100/100" alt="张先生" class="w-12 h-12 rounded-full object-cover mr-4">
+                    <div>
+                        <h4 class="font-semibold text-neutral">张先生</h4>
+                        <p class="text-gray-500 text-sm">500亩小麦种植户</p>
+                    </div>
+                </div>
+                <div class="text-yellow-400 mb-4">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                </div>
+                <p class="text-gray-600">
+                    "使用智农续航的无人机施药服务，效率比人工施药提高了好几倍，而且药量控制精准，成本降低了不少。他们的服务也很专业，从预约到服务完成都很顺畅。"
+                </p>
+            </div>
+
+            <!-- 评价2 -->
+            <div class="bg-white p-6 rounded-xl shadow-md hover-lift">
+                <div class="flex items-center mb-4">
+                    <img src="https://picsum.photos/id/1006/100/100" alt="李女士" class="w-12 h-12 rounded-full object-cover mr-4">
+                    <div>
+                        <h4 class="font-semibold text-neutral">李女士</h4>
+                        <p class="text-gray-500 text-sm">300亩果园经营者</p>
+                    </div>
+                </div>
+                <div class="text-yellow-400 mb-4">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half-o"></i>
+                </div>
+                <p class="text-gray-600">
+                    "病虫害监测服务非常实用，能够提前发现果园中的病虫害问题，及时采取措施，避免了大量损失。报告详细，建议专业，非常满意他们的服务。"
+                </p>
+            </div>
+
+            <!-- 评价3 -->
+            <div class="bg-white p-6 rounded-xl shadow-md hover-lift">
+                <div class="flex items-center mb-4">
+                    <img src="https://picsum.photos/id/1012/100/100" alt="王先生" class="w-12 h-12 rounded-full object-cover mr-4">
+                    <div>
+                        <h4 class="font-semibold text-neutral">王先生</h4>
+                        <p class="text-gray-500 text-sm">200亩水稻种植户</p>
+                    </div>
+                </div>
+                <div class="text-yellow-400 mb-4">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                </div>
+                <p class="text-gray-600">
+                    "无人机播种服务让我省去了大量人力，而且播种均匀，发芽率比以前提高了不少。价格也很合理，50亩以上还有优惠，非常划算。推荐给所有种粮大户！"
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 常见问题 -->
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral mb-4">常见问题</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">解答您可能关心的问题</p>
+        </div>
+
+        <div class="max-w-3xl mx-auto">
+            <div class="space-y-6">
+                <!-- 问题1 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button class="faq-toggle w-full flex justify-between items-center p-6 text-left focus:outline-none" aria-expanded="false">
+                        <span class="font-medium text-neutral">如何预约你们的服务？</span>
+                        <i class="fa fa-plus text-primary transition-transform"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-6">
+                        <p class="text-gray-600">
+                            您可以通过我们的网站在线预约，填写相关信息提交即可；也可以拨打我们的客服电话400-888-9999进行预约。我们的客服人员会在收到预约信息后24小时内与您联系，确认订单详情。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 问题2 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button class="faq-toggle w-full flex justify-between items-center p-6 text-left focus:outline-none" aria-expanded="false">
+                        <span class="font-medium text-neutral">服务价格如何计算？</span>
+                        <i class="fa fa-plus text-primary transition-transform"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-6">
+                        <p class="text-gray-600">
+                            我们的服务价格按亩计算，病虫害监测5元/亩，作物播种12元/亩，施药施肥15元/亩。50亩以上面积的农田可享受9折优惠，农田范围空旷无障碍物的还可根据实际情况给予额外5%-10%优惠。新用户首次下单立减50元，同时预约两项及以上服务享受总价8.5折优惠。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 问题3 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button class="faq-toggle w-full flex justify-between items-center p-6 text-left focus:outline-none" aria-expanded="false">
+                        <span class="font-medium text-neutral">服务需要提前多久预约？</span>
+                        <i class="fa fa-plus text-primary transition-transform"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-6">
+                        <p class="text-gray-600">
+                            为了保证服务质量和及时安排，建议您至少提前3-7天预约。在农忙季节（如春季播种期、夏季病虫害高发期），建议提前10-15天预约，以便我们更好地为您安排服务时间。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 问题4 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button class="faq-toggle w-full flex justify-between items-center p-6 text-left focus:outline-none" aria-expanded="false">
+                        <span class="font-medium text-neutral">你们的服务覆盖哪些地区？</span>
+                        <i class="fa fa-plus text-primary transition-transform"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-6">
+                        <p class="text-gray-600">
+                            目前我们的服务已覆盖全国20+省市自治区，包括北京、天津、河北、山东、河南、江苏、安徽、湖北、湖南、广东、广西、四川、重庆、云南、贵州、陕西、山西、辽宁、吉林、黑龙江等。我们正在不断扩大服务范围，敬请关注我们的官网获取最新信息。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 问题5 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button class="faq-toggle w-full flex justify-between items-center p-6 text-left focus:outline-none" aria-expanded="false">
+                        <span class="font-medium text-neutral">如果对服务不满意，可以退款吗？</span>
+                        <i class="fa fa-plus text-primary transition-transform"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-6">
+                        <p class="text-gray-600">
+                            我们承诺提供高质量的服务，如果您对服务结果不满意，请在服务完成后24小时内联系我们的客服人员。我们会派专业人员进行实地检查，如确属我们的服务问题，我们将根据情况给予相应的退款或重新服务。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 页脚 -->
+<footer class="bg-neutral text-white pt-16 pb-8">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            <div>
+                <div class="flex items-center mb-6">
+                    <i class="fa fa-pagelines text-primary text-3xl mr-2"></i>
+                    <span class="text-xl font-bold">智农续航</span>
+                </div>
+                <p class="text-gray-400 mb-6">
+                    科技赋能农业，智慧改变农村，让农业生产更简单、更智能。
+                </p>
+                <div class="flex space-x-4">
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-primary transition-colors">
+                        <i class="fa fa-weixin"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-primary transition-colors">
+                        <i class="fa fa-weibo"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-primary transition-colors">
+                        <i class="fa fa-qq"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-semibold mb-6">快速链接</h4>
+                <ul class="space-y-3">
+                    <li><a href="#services" class="text-gray-400 hover:text-primary transition-colors">服务项目</a></li>
+                    <li><a href="#pricing" class="text-gray-400 hover:text-primary transition-colors">价格详情</a></li>
+                    <li><a href="#process" class="text-gray-400 hover:text-primary transition-colors">租借流程</a></li>
+                    <li><a href="#about" class="text-gray-400 hover:text-primary transition-colors">关于我们</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">新闻动态</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">联系我们</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-semibold mb-6">服务支持</h4>
+                <ul class="space-y-3">
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">常见问题</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">服务条款</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">隐私政策</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">退款政策</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">技术支持</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">投诉建议</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-semibold mb-6">联系我们</h4>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <i class="fa fa-map-marker text-primary mt-1 mr-3"></i>
+                        <span class="text-gray-400">广西南宁武鸣区</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa fa-phone text-primary mt-1 mr-3"></i>
+                        <span class="text-gray-400">400-888-9999</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa fa-envelope text-primary mt-1 mr-3"></i>
+                        <span class="text-gray-400">contact@zhinongxuhang.com</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa fa-clock-o text-primary mt-1 mr-3"></i>
+                        <span class="text-gray-400">周一至周日 8:00-20:00</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-800 pt-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm mb-4 md:mb-0">
+                    &copy; 2025 智农续航科技有限公司. 保留所有权利.
+                </p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-500 hover:text-primary text-sm transition-colors">隐私政策</a>
+                    <a href="#" class="text-gray-500 hover:text-primary text-sm transition-colors">服务条款</a>
+                    <a href="#" class="text-gray-500 hover:text-primary text-sm transition-colors">网站地图</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- 返回顶部按钮 -->
+<button id="back-to-top" class="fixed bottom-8 right-8 w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-primary/90">
+    <i class="fa fa-chevron-up"></i>
+</button>
+
+<!-- JavaScript -->
+<script>
+    // 导航栏滚动效果
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('bg-white', 'shadow-md');
+        navbar.classList.remove('bg-white/90');
+      } else {
+        navbar.classList.remove('bg-white', 'shadow-md');
+        navbar.classList.add('bg-white/90');
+      }
+    });
+
+    // 移动端菜单
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      if (mobileMenu.classList.contains('hidden')) {
+        mobileMenuButton.innerHTML = '<i class="fa fa-bars text-xl"></i>';
+      } else {
+        mobileMenuButton.innerHTML = '<i class="fa fa-times text-xl"></i>';
+      }
+    });
+
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+
+          // 关闭移动菜单
+          if (!mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+            mobileMenuButton.innerHTML = '<i class="fa fa-bars text-xl"></i>';
+          }
+        }
+      });
+    });
+
+    // 返回顶部按钮
+    const backToTopButton = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopButton.classList.remove('opacity-0', 'invisible');
+        backToTopButton.classList.add('opacity-100', 'visible');
+      } else {
+        backToTopButton.classList.add('opacity-0', 'invisible');
+        backToTopButton.classList.remove('opacity-100', 'visible');
+      }
+    });
+
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+
+    // 常见问题折叠
+    const faqToggles = document.querySelectorAll('.faq-toggle');
+    faqToggles.forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const content = toggle.nextElementSibling;
+        const icon = toggle.querySelector('i');
+
+        // 切换当前FAQ的显示状态
+        content.classList.toggle('hidden');
+        if (content.classList.contains('hidden')) {
+          icon.classList.remove('fa-minus', 'rotate-45');
+          icon.classList.add('fa-plus');
+          toggle.setAttribute('aria-expanded', 'false');
+        } else {
+          icon.classList.remove('fa-plus');
+          icon.classList.add('fa-minus', 'rotate-45');
+          toggle.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    // 表单提交
+    const bookingForm = document.getElementById('booking-form');
+    if (bookingForm) {
+      bookingForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // 这里只是模拟表单提交，实际项目中需要发送数据到服务器
+        const submitButton = bookingForm.querySelector('button[type="submit"]');
+        const originalText = submitButton.innerHTML;
+
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 提交中...';
+        
+        setTimeout(() => {
+          alert('预约成功！我们的客服人员将尽快与您联系。');
+          bookingForm.reset();
+          submitButton.disabled = false;
+          submitButton.innerHTML = originalText;
+        }, 1500);
+      });
+    }
+</script>
+</body>
+</html>
